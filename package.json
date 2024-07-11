@@ -1,0 +1,17 @@
+{
+  "name": "fraude",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000F\u0000r\u0000a\u0000u\u0000d\u0000e\u0000F\u0000r\u0000m\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.44.1",
+    "@types/node": "^20.14.8"
+  },
+  "dependencies": {
+    "xlsx": "^0.18.5"
+  }
+}
