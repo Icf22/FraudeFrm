@@ -25,7 +25,7 @@ export class MainPage extends BasePage{
     async obtenerFraudes(){
        await this.btnReporteFraudes.click();
        await this.lblConsultaFraudes.click();
-       await this.page.waitForTimeout(4000);
+       //await this.page.waitForTimeout(4000);
     }
 
 }

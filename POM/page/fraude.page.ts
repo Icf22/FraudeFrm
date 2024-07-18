@@ -9,11 +9,11 @@ export class FraudePage extends BasePage {
     lblCuenta: Locator;
     msgResultado: Locator;
     lblFechaFraude: Locator;
-    selectFraude: string; // Cambié esto a string
-    selectIndCC: string; // Cambié esto a string
+    selectFraude: string;
+    selectIndCC: string;
     btnGrabar: Locator;
-    growlMessage: string; // Cambié esto a string
-    txtComentarios: string; // Cambié esto a string
+    growlMessage: string;
+    txtComentarios: string;
     iframeSelector: string;
 
     constructor(page: Page) {
@@ -21,12 +21,12 @@ export class FraudePage extends BasePage {
         this.txtReferencia = page.locator('#vCF_REFERENCIA');
         this.btnBuscar = page.locator('#BUSCAR');
         this.lblCuenta = page.locator('//span[@id="span_vNUM_CUENTA_MC_0001"]');
-        this.txtComentarios = '#vVCOMENTARIOS'; // Cambio a string
+        this.txtComentarios = '#vVCOMENTARIOS';
         this.lblFechaFraude = page.locator('#vVL_FECHA_FRAUDE');
-        this.selectFraude = '#vVL_TIP_FRA'; // Cambio a string
-        this.selectIndCC = '#vVL_IND_CC'; // Cambio a string
+        this.selectFraude = '#vVL_TIP_FRA';
+        this.selectIndCC = '#vVL_IND_CC';
         this.btnGrabar = page.locator('#GRABAR');
-        this.growlMessage = '#growls-cc .growl-message'; // Cambio a string
+        this.growlMessage = '#growls-cc .growl-message';
         this.iframeSelector = '#RESULTADOFRAUDES';
     }
 
@@ -48,7 +48,6 @@ export class FraudePage extends BasePage {
                     if (referencia) {
                         await this.txtReferencia.fill(referencia);
                         await this.btnBuscar.click();
-                        //await this.page.waitForTimeout(6000);
 
                         const iframeElement = await this.page.waitForSelector(this.iframeSelector);
                         const frame: Frame | null = await iframeElement.contentFrame();
@@ -76,28 +75,28 @@ export class FraudePage extends BasePage {
         const iframeElement = await this.page.waitForSelector(this.iframeSelector);
         const frame: Frame | null = await iframeElement.contentFrame();
         if (frame) {
+            await this.page.waitForTimeout(1000);
+            await this.page.waitForLoadState('domcontentloaded');
             await frame.waitForSelector(this.txtComentarios);
             await frame.fill('#vVL_FECHA_FRAUDE', fecha);
             await frame.fill(this.txtComentarios, 'Registro número: ' + i);
-            await this.page.waitForTimeout(4000);
 
             console.log('entre al método fillFraude');
-            //await this.page.waitForTimeout(4000);
             await this.selectRandomFraudeOption(frame);
             await this.selectRandomIndCCOption(frame);
             console.log('Terminé de llenar los datos');
-            //await this.page.waitForTimeout(4000);
             await frame.click('#GRABAR');
             console.log('Le di click al botón grabar')
             await this.captureGrowlMessage(frame);
             console.log('termine el método que captura la pantalla')
-            //await this.page.waitForTimeout(4000);
+            await this.page.waitForTimeout(1000);
         } else {
             console.error('No se pudo acceder al contenido del iframe');
         }
     }
 
     async selectRandomFraudeOption(frame: Frame) {
+        await this.page.waitForTimeout(2000);
         const selectFraude = frame.locator(this.selectFraude);
         const options = await selectFraude.locator('option').all();
         const randomIndex = Math.floor(Math.random() * options.length);
@@ -108,8 +107,9 @@ export class FraudePage extends BasePage {
             await selectFraude.selectOption(optionValue);
         }
     }
-
+    
     async selectRandomIndCCOption(frame: Frame) {
+        await this.page.waitForTimeout(2000);
         const selectIndCC = frame.locator(this.selectIndCC);
         const options = await selectIndCC.locator('option').all();
         const randomIndex = Math.floor(Math.random() * options.length);
@@ -131,7 +131,6 @@ export class FraudePage extends BasePage {
             const folioNumber = match[1];
             const screenshotPath = `./resources/fraude_folio_${folioNumber}.png`;
 
-            // Tomar captura de pantalla de la página principal enfocando en el área del iframe
             const element = this.page.locator(this.iframeSelector);
             await element.screenshot({ path: screenshotPath });
             console.log(`Screenshot saved to ${screenshotPath}`);

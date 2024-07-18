@@ -26,12 +26,14 @@ export class ReporteFraude extends BasePage {
             for (let i = 2; i <= lastRow; i++) {
                 try {
                     let referencia = worksheet['A' + i]?.w || '';
-                    console.log('referencia: ', referencia);
+                    console.log('📋 Validando la referencia ', referencia, '...');
 
                     if (referencia) {
+                        await this.page.waitForTimeout(2000);
                         await this.txtFiltroReferencia.fill(referencia);
+                        await this.btnBuscar.waitFor();
                         await this.btnBuscar.click();
-                        await this.page.waitForTimeout(6000);
+                        await this.page.waitForTimeout(3000);
 
                         const iframeElement = await this.page.waitForSelector(this.iframeSelector);
                         const frame: Frame | null = await iframeElement.contentFrame();
@@ -40,11 +42,11 @@ export class ReporteFraude extends BasePage {
 
                             const textoFraude = await frame.locator('#span_vC_STA_DESCRIPCION_0001').textContent();
                             if (textoFraude?.includes('FRAUDE REGISTRADO')) {
-                                console.log(`La referencia ${referencia} se encuentra registrada.`);
+                                console.log(`✅ La referencia ${referencia} se encuentra registrada.\n`);
                             } else {
                                 const textoSinResultados = await frame.locator('#TEXTBLOCK1').textContent();
                                 if (textoSinResultados?.includes('Sin resultados, verifique su información.')) {
-                                    console.log(`La referencia ${referencia} no se encuentra registrada.`);
+                                    console.log(`❌La referencia ${referencia} no se encuentra registrada.`);
                                 }
                             }
                         } else {

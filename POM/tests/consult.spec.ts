@@ -13,4 +13,3 @@ test('obtenerFraudesRegistrados', async ({page}) => {
     await mainPage.obtenerFraudes();
     await reporteFraude.consultarFraudes();
  })
- 
