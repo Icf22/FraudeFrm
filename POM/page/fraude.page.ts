@@ -99,7 +99,7 @@ export class FraudePage extends BasePage {
         await this.page.waitForTimeout(2000);
         const selectFraude = frame.locator(this.selectFraude);
         const options = await selectFraude.locator('option').all();
-        const randomIndex = Math.floor(Math.random() * options.length);
+        const randomIndex = Math.floor(Math.random() * (options.length - 1)) + 1;
         const randomOption = options[randomIndex];
 
         const optionValue = await randomOption.getAttribute('value');
@@ -112,7 +112,7 @@ export class FraudePage extends BasePage {
         await this.page.waitForTimeout(2000);
         const selectIndCC = frame.locator(this.selectIndCC);
         const options = await selectIndCC.locator('option').all();
-        const randomIndex = Math.floor(Math.random() * options.length);
+        const randomIndex = Math.floor(Math.random() * (options.length - 1)) + 1;
         const randomOption = options[randomIndex];
 
         const optionValue = await randomOption.getAttribute('value');
