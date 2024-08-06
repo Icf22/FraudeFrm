@@ -72,6 +72,18 @@ export class FraudePage extends BasePage {
     }
 
     async fillFraude(fecha: string, i: number) {
+        // Función para maximizar la ventana
+        // const maximizeWindow = async () => {
+        //     // Obtener el tamaño de la pantalla completa
+        //     const { width, height } = await this.page.evaluate(() => {
+        //         return { width: window.innerWidth, height: window.innerHeight };
+        //     });
+        //     // Establecer el tamaño de la ventana al tamaño de la pantalla completa
+        //     await this.page.setViewportSize({ width, height });
+        // };
+        // // Maximizar la ventana antes de comenzar la operación
+        // await maximizeWindow();
+
         const iframeElement = await this.page.waitForSelector(this.iframeSelector);
         const frame: Frame | null = await iframeElement.contentFrame();
         if (frame) {
@@ -90,6 +102,7 @@ export class FraudePage extends BasePage {
             await this.captureGrowlMessage(frame);
             console.log('termine el método que captura la pantalla')
             await this.page.waitForTimeout(1000);
+            await this.page.reload();
         } else {
             console.error('No se pudo acceder al contenido del iframe');
         }
@@ -107,7 +120,7 @@ export class FraudePage extends BasePage {
             await selectFraude.selectOption(optionValue);
         }
     }
-    
+
     async selectRandomIndCCOption(frame: Frame) {
         await this.page.waitForTimeout(2000);
         const selectIndCC = frame.locator(this.selectIndCC);
